@@ -41,6 +41,7 @@ module Kitchen
       default_config :tls_cacert,    nil
       default_config :tls_cert,      nil
       default_config :tls_key,       nil
+      default_config :ssh_port,      nil
 
       default_config :use_sudo do |driver|
         !driver.remote_socket?
@@ -194,7 +195,8 @@ module Kitchen
       end
 
       def build_run_command(image_id)
-        cmd = "run -d -p 22"
+        cmd = 'run -d'
+        cmd << "-p #{config[:ssh_port]}:22"
         Array(config[:forward]).each {|port| cmd << " -p #{port}"}
         Array(config[:dns]).each {|dns| cmd << " -dns #{dns}"}
         Array(config[:volume]).each {|volume| cmd << " -v #{volume}"}
